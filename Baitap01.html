@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửa hàng sản phẩm công nghệ</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 25px;
+            background: #f1f5f9;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1d4ed8;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        #search {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #search:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px #2563eb20;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(220px, 1fr)
+            );
+            gap: 20px;
+        }
+
+        .product {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #00000010;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px #00000018;
+        }
+
+        .product img {
+            width: 100%;
+            height: 190px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .product h3 {
+            color: #1d4ed8;
+            font-size: 18px;
+            margin: 15px 0 10px;
+        }
+
+        .price {
+            color: #dc2626;
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        #message {
+            text-align: center;
+            color: #dc2626;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        #resultCount {
+            color: #475569;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 35px;
+            padding: 20px 0;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .product img {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>CỬA HÀNG CÔNG NGHỆ</h1>
+
+        <p class="subtitle">
+            Khám phá các sản phẩm công nghệ dành cho bạn
+        </p>
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Nhập tên sản phẩm cần tìm..."
+            aria-label="Tìm kiếm sản phẩm"
+        >
+
+        <p id="resultCount"></p>
+        <p id="message" role="status"></p>
+
+        <div id="products" class="products"></div>
+
+        <footer>
+            © 2026 - Website giới thiệu sản phẩm công nghệ
+        </footer>
+
+    </div>
+
+    <script>
+        // 1. Danh sách sản phẩm
+        const products = [
+            {
+                name: "Laptop LENOVO LOQ",
+                price: 21000000,
+                image: "https://hanoicomputercdn.com/media/product/78023_laptop_lenovo_gaming_loq_15irx9__83dv000mvn__1.jpg",
+                description: "Laptop phục vụ học tập và làm việc."
+            },
+            {
+                name: "iPhone 15",
+                price: 18000000,
+                image: "https://tse1.mm.bing.net/th/id/OIP.qiGx08uLD9psOG46k8vLdAHaI6?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+                description: "Điện thoại thông minh hiện đại."
+            },
+            {
+                name: "Tai nghe Sony",
+                price: 5000000,
+                image: "https://tse3.mm.bing.net/th/id/OIP.79fIqG08U2jhWvvnmI6MqwHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+                description: "Tai nghe không dây tiện lợi."
+            },
+            {
+                name: "Bàn phím cơ",
+                price: 1800000,
+                image: "https://tse1.mm.bing.net/th/id/OIP.hBgLfM7xotHjk6FVhekXtAHaLQ?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+                description: "Bàn phím phù hợp cho học tập và chơi game."
+            },
+            {
+                name: "Chuột không dây logitech",
+                price: 900000,
+                image: "https://down-vn.img.susercontent.com/file/vn-11134207-7ras8-m3n02wz35y944a",
+                description: "Chuột máy tính nhỏ gọn, dễ sử dụng."
+            },
+            {
+                name: "Màn hình máy tính Asus",
+                price: 3500000,
+                image: "https://hoanghapc.vn/media/news/0604_man-hinh-may-tinh-la-gi-3.jpg",
+                description: "Màn hình phục vụ học tập và giải trí."
+            }
+        ];
+
+        // 2. Lấy các phần tử HTML
+        const searchInput = document.getElementById("search");
+        const productList = document.getElementById("products");
+        const message = document.getElementById("message");
+        const resultCount = document.getElementById("resultCount");
+
+        // 3. Hiển thị danh sách sản phẩm
+        function displayProducts(list) {
+            productList.replaceChildren();
+            message.textContent = "";
+            resultCount.textContent = "";
+
+            if (list.length === 0) {
+                message.textContent =
+                    "Không tìm thấy sản phẩm phù hợp!";
+                return;
+            }
+
+            resultCount.textContent =
+                "Tìm thấy " + list.length + " sản phẩm";
+
+            list.forEach(function(product) {
+                const card = document.createElement("article");
+                card.className = "product";
+
+                // Tạo hình ảnh
+                const img = document.createElement("img");
+                img.src = product.image;
+                img.alt = product.name;
+                img.loading = "lazy";
+
+                // Thông báo khi ảnh không tải được
+                img.addEventListener("error", function() {
+                    img.alt = "Không tải được ảnh: " + product.name;
+                    img.src =
+                        "https://placehold.co/400x250/f1f5f9/64748b?text=No+Image";
+                }, { once: true });
+
+                // Tạo tên sản phẩm
+                const name = document.createElement("h3");
+                name.textContent = product.name;
+
+                // Tạo giá sản phẩm
+                const price = document.createElement("p");
+                price.className = "price";
+                price.textContent =
+                    product.price.toLocaleString("vi-VN") + " VNĐ";
+
+                // Tạo mô tả
+                const description = document.createElement("p");
+                description.className = "description";
+                description.textContent = product.description;
+
+                // Đưa các thành phần vào thẻ sản phẩm
+                card.append(img, name, price, description);
+                productList.appendChild(card);
+            });
+        }
+
+        // 4. Chức năng tìm kiếm
+        searchInput.addEventListener("input", function() {
+            const keyword = searchInput.value
+                .trim()
+                .toLocaleLowerCase("vi");
+
+            const results = products.filter(function(product) {
+                return product.name
+                    .toLocaleLowerCase("vi")
+                    .includes(keyword);
+            });
+
+            displayProducts(results);
+        });
+
+        // 5. Hiển thị tất cả sản phẩm khi mở trang
+        displayProducts(products);
+    </script>
+</body>
+</html>
